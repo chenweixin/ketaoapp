@@ -1,0 +1,15 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    xmlns:my="http://schemas.android.com/apk/res-auto"
+    android:layout_height="match_parent" tools:context="com.android.ketaoapp.fragment.HomeFragment"
+    android:orientation="vertical">
+
+    <com.android.ketaoapp.view.MainTitleView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        my:item_title="我"
+        >
+
+    </com.android.ketaoapp.view.MainTitleView>
+
+</LinearLayout>

@@ -1,52 +1,91 @@
 package com.android.ketaoapp;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.view.View;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.widget.Toast;
 
-public class MainActivity extends AppCompatActivity {
+import com.android.ketaoapp.config.Define;
+import com.android.ketaoapp.fragment.HomeFragment;
+import com.android.ketaoapp.fragment.MessageFragment;
+import com.android.ketaoapp.fragment.ProfileFragment;
+import com.android.ketaoapp.util.HTTPRequestUtil;
+import com.android.ketaoapp.view.MyTabView;
+import com.loopj.android.http.JsonHttpResponseHandler;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+public class MainActivity extends FragmentActivity implements MyTabView.onTabSelectListener {
+
+    private int current = 0;
+
+    private Fragment homeFragment, messageFragment, profileFragment;
+    private FragmentManager fm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+        fm = getSupportFragmentManager();
+        showFragment(0);
+
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
+    public void onTabSelect(int position) {
+        if(current == position) return;
+        current = position;
+        showFragment(position);
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+    private void showFragment(int index){
+        FragmentTransaction ft = fm.beginTransaction();
+        hideFragment(ft);
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch (index){
+            case 0:
+                if(homeFragment != null){
+                    ft.show(homeFragment);
+                }
+                else{
+                    homeFragment = new HomeFragment();
+                    ft.add(R.id.mypage, homeFragment);
+                }
+                break;
+            case 1:
+                if(messageFragment != null){
+                    ft.show(messageFragment);
+                }
+                else{
+                    messageFragment = new MessageFragment();
+                    ft.add(R.id.mypage, messageFragment);
+                }
+                break;
+            case 2:
+                if(profileFragment != null){
+                    ft.show(profileFragment);
+                }
+                else{
+                    profileFragment = new ProfileFragment();
+                    ft.add(R.id.mypage, profileFragment);
+                }
+                break;
         }
+        ft.commit();
+    }
 
-        return super.onOptionsItemSelected(item);
+    private void hideFragment(FragmentTransaction ft){
+        if(homeFragment != null){
+            ft.hide(homeFragment);
+        }
+        if(messageFragment != null){
+            ft.hide(messageFragment);
+        }
+        if(profileFragment != null){
+            ft.hide(profileFragment);
+        }
     }
 }

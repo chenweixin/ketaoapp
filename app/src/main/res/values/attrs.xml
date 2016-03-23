@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="TextView">
+        <attr name="item_name" format="string" />
+        <attr name="item_title_left" format="string" />
+        <attr name="item_title" format="string" />
+        <attr name="item_title_right" format="string" />
+        <attr name="app_name" format="string" />
+        <attr name="app_desc" format="string" />
+        <attr name="item_detail" format="string" />
+        <attr name="detail_text_color" format = "color" />
+        <attr name="likenumber" format="string"/>
+    </declare-styleable>
+    <declare-styleable name="ImageView">
+        <attr name="image_src" format="reference" />
+        <attr name="left_src" format="reference" />
+        <attr name="right_src" format="reference" />
+        <attr name="app_icon" format="reference" />
+        <attr name="user_icon" format="reference" />
+    </declare-styleable>
+</resources>
