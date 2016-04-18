@@ -17,7 +17,7 @@ public class HTTPRequestUtil {
 		client.post(context, url, entity, contentType, responseHandler);
 	}
 
-	public static void get(String url, RequestParams params, String contentType, JsonHttpResponseHandler responseHandler) {
+	public static void get(String url, RequestParams params, JsonHttpResponseHandler responseHandler) {
 		client.get(url, params, responseHandler);
 	}
 

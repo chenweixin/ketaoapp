@@ -1,5 +1,6 @@
 package com.android.ketaoapp.view;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
@@ -114,10 +115,9 @@ public class DetailTitleView extends RelativeLayout implements View.OnClickListe
                 leftBtnListener.onLeftButtonClick(v);
             }
             Context context = v.getContext();
-//            if (backBtnClickable && (context instanceof Activity)) {
-//                ((Activity) context).onBackPressed();
-//
-//            }
+            if (context instanceof Activity) {
+                ((Activity) context).onBackPressed();
+            }
         } else if (R.id.iv_right == id) {
             if (null != rightBtnListener)
                 rightBtnListener.onRightButtonClick(v);

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:my="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.android.ketaoapp.ReccourseActivity"
+    android:orientation="vertical">
+
+    <com.android.ketaoapp.view.DetailTitleView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        my:item_title="热门评论"
+        my:left_src="@drawable/detail_navigation_back"
+        >
+
+    </com.android.ketaoapp.view.DetailTitleView>
+
+    <FrameLayout
+        android:id="@+id/rl_cover_loading"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="正在加载..."
+            android:layout_gravity="center"
+            android:textSize="16dp"
+            />
+
+    </FrameLayout>
+
+    <com.handmark.pulltorefresh.library.PullToRefreshListView
+        xmlns:ptr="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/lv_hotcomment"
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+        android:background="#ffefefef"
+        android:cacheColorHint="@color/trans"
+        android:divider="#00000000"
+        android:dividerHeight="10dp"
+        android:overScrollMode="never"
+        ptr:ptrAnimationStyle="flip"
+        ptr:ptrHeaderTextColor="#000000" />
+
+</LinearLayout>

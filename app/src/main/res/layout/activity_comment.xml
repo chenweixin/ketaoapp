@@ -1,0 +1,62 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:my="http://schemas.android.com/apk/res-auto"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" 
+    android:background="@color/grey"
+    android:orientation="vertical"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    >
+
+    <LinearLayout 
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content" 
+	    android:orientation="vertical">
+		<com.android.ketaoapp.view.DetailTitleView
+			android:id="@+id/comment_title_view"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			my:left_src="@drawable/detail_navigation_back"
+			my:right_src="@mipmap/ic_common_selected"
+			my:item_title="课程评分"
+			/>
+
+	    <RelativeLayout
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_margin="10dp"
+	        android:background="@color/white"
+	        android:padding="10dp" 
+	        android:layout_marginTop="10dp">
+
+	        <LinearLayout
+	            android:layout_width="match_parent"
+	            android:layout_height="wrap_content" 
+	            android:layout_alignParentLeft="true"
+	            android:layout_alignParentTop="true"
+	            android:orientation="vertical"
+	            >
+
+				<com.android.ketaoapp.view.EvaluationView
+	                android:id="@+id/comment_evaluation"
+			        android:layout_width="180dp"
+			        android:layout_height="wrap_content"
+			        android:layout_marginBottom="10dp"
+			        />
+				<EditText
+					android:id="@+id/et_comment_content"
+					android:layout_width="match_parent"
+					android:layout_height="120dp"
+					android:padding="10dp"
+					android:drawablePadding="10dp"
+					android:hint="点击输入评论内容"
+					android:textSize="15dp"
+					android:background="@null"
+					android:gravity="top|left"
+					/>
+	        </LinearLayout>
+
+	    </RelativeLayout>
+	
+	</LinearLayout>
+</LinearLayout>

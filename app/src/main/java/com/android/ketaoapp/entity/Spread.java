@@ -1,9 +1,11 @@
 package com.android.ketaoapp.entity;
 
+import java.io.Serializable;
+
 /**
  * Created by Administrator on 2016/3/22 0022.
  */
-public class Spread {
+public class Spread implements Serializable{
     private String id;
 
     private String title;

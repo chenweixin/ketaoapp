@@ -1,10 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:my="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    tools:context="com.android.ketaoapp.ReccourseActivity">
+    android:layout_height="match_parent"
+    tools:context="com.android.ketaoapp.ReccourseActivity"
+    android:orientation="vertical">
 
-</RelativeLayout>
+    <com.android.ketaoapp.view.DetailTitleView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        my:item_title="推荐课程"
+        my:left_src="@drawable/detail_navigation_back"
+        >
+
+    </com.android.ketaoapp.view.DetailTitleView>
+
+    <FrameLayout
+        android:id="@+id/rl_cover_loading"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="正在加载..."
+            android:layout_gravity="center"
+            android:textSize="16dp"
+            />
+
+    </FrameLayout>
+
+    <com.handmark.pulltorefresh.library.PullToRefreshListView
+        xmlns:ptr="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/lv_reccourse"
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+        android:background="#ffefefef"
+        android:cacheColorHint="@color/trans"
+        android:divider="#00000000"
+        android:dividerHeight="10dp"
+        android:overScrollMode="never"
+        ptr:ptrAnimationStyle="flip"
+        ptr:ptrHeaderTextColor="#000000" />
+
+</LinearLayout>

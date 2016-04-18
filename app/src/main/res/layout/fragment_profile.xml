@@ -2,7 +2,9 @@
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     xmlns:my="http://schemas.android.com/apk/res-auto"
     android:layout_height="match_parent" tools:context="com.android.ketaoapp.fragment.HomeFragment"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@color/background_color"
+    >
 
     <com.android.ketaoapp.view.MainTitleView
         android:layout_width="match_parent"
@@ -11,5 +13,141 @@
         >
 
     </com.android.ketaoapp.view.MainTitleView>
+
+    <FrameLayout
+        android:id="@+id/rl_cover_loading"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="正在加载..."
+            android:layout_gravity="center"
+            android:textSize="16dp"
+            />
+
+    </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:orientation="horizontal"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:gravity="center_vertical"
+        android:background="@color/white"
+        android:layout_marginTop="20dp"
+        android:id="@+id/profile_my_detail">
+        <ImageView
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:background="@mipmap/ic_launcher"
+            android:id="@+id/profile_avatar" />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:layout_marginLeft="10dp"
+            android:orientation="vertical"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="木木"
+                android:textSize="17dp"
+                android:textColor="@color/text_color"
+                android:id="@+id/profile_name" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="学号: 201232"
+                android:textSize="15dp"
+                android:layout_marginTop="5dp"
+                android:id="@+id/profile_id" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingTop="15dp"
+        android:paddingBottom="15dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:gravity="center_vertical"
+        android:background="@color/white"
+        android:layout_marginTop="20dp"
+        android:id="@+id/profile_my_collect">
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@mipmap/ic_topic_nationwide_icon"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="我的关注"
+            android:textColor="@color/text_color"
+            android:layout_marginLeft="12dp"
+            android:textSize="17dp"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingTop="15dp"
+        android:paddingBottom="15dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:gravity="center_vertical"
+        android:background="@color/white"
+        android:layout_marginTop="1dp"
+        android:id="@+id/profile_my_comment">
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@mipmap/ic_topic_english_icon"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="我的评论"
+            android:textColor="@color/text_color"
+            android:layout_marginLeft="12dp"
+            android:textSize="17dp"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingTop="15dp"
+        android:paddingBottom="15dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:gravity="center_vertical"
+        android:background="@color/white"
+        android:layout_marginTop="1dp"
+        android:id="@+id/profile_my_logout">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="退出"
+            android:textColor="@color/text_color"
+            android:layout_marginLeft="12dp"
+            android:textSize="17dp"
+            />
+
+    </LinearLayout>
 
 </LinearLayout>
