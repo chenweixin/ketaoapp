@@ -24,9 +24,7 @@
         </activity>
         <activity android:name=".MainActivity" >
         </activity>
-        <activity android:name=".ReccourseActivity" >
-        </activity>
-        <activity android:name=".SpreadActivity" >
+        <activity android:name=".SpreadListActivity" >
         </activity>
         <activity android:name=".CourseActivity" >
         </activity>
@@ -34,7 +32,15 @@
         </activity>
         <activity android:name=".CommentActivity" >
         </activity>
-        <activity android:name=".HotcommentActivity" >
+        <activity android:name=".TeaListActivity" >
+        </activity>
+        <activity android:name=".CourseListActivity" >
+        </activity>
+        <activity android:name=".CommentListActivity" >
+        </activity>
+        <activity android:name=".AllTypeActivity" >
+        </activity>
+        <activity android:name=".SearchActivity" >
         </activity>
     </application>
 

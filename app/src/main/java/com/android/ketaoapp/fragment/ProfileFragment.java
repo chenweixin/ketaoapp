@@ -3,6 +3,7 @@ package com.android.ketaoapp.fragment;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,6 +18,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.android.ketaoapp.CommentListActivity;
+import com.android.ketaoapp.CourseListActivity;
 import com.android.ketaoapp.LoginActivity;
 import com.android.ketaoapp.R;
 import com.android.ketaoapp.config.Define;
@@ -41,6 +44,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
     private FrameLayout rl_cover_loading;
     private ImageView ic_avatar;
     private TextView tv_name, tv_id;
+    private ProgressDialog dialog;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -72,15 +76,26 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            rl_cover_loading.animate()
-                    .alpha(0f)
-                    .setDuration(200)
-                    .setListener(new AnimatorListenerAdapter() {
-                        @Override
-                        public void onAnimationEnd(Animator animation) {
-                            rl_cover_loading.setVisibility(View.GONE);
-                        }
-                    });
+            switch (msg.what){
+                case 0:
+                    rl_cover_loading.animate()
+                            .alpha(0f)
+                            .setDuration(200)
+                            .setListener(new AnimatorListenerAdapter() {
+                                @Override
+                                public void onAnimationEnd(Animator animation) {
+                                    rl_cover_loading.setVisibility(View.GONE);
+                                }
+                            });
+                    break;
+                case 1:
+                    LocalSharePreferences.clear(context);
+                    context.startActivity(new Intent(context, LoginActivity.class));
+                    ((Activity)context).finish();
+                    dialog.dismiss();
+                    break;
+            }
+
         }
     };
 
@@ -118,15 +133,26 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
 
         @Override
     public void onClick(View v) {
+            Intent intent  = null;
         switch (v.getId()){
             case R.id.profile_my_logout:
-                LocalSharePreferences.clear(context);
-                context.startActivity(new Intent(context, LoginActivity.class));
-                ((Activity)context).finish();
+                dialog = dialog.show(context, null, "正在退出");
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        handler.sendEmptyMessage(1);
+                    }
+                }, 500);
                 break;
             case R.id.profile_my_collect:
+                intent = new Intent(context, CourseListActivity.class);
+                intent.putExtra(CourseListActivity.LIST_TYPE, CourseListActivity.MY_COURSE);
+                context.startActivity(intent);
                 break;
             case R.id.profile_my_comment:
+                intent = new Intent(context, CommentListActivity.class);
+                intent.putExtra(CourseListActivity.LIST_TYPE, CommentListActivity.MY_COMMENT);
+                context.startActivity(intent);
                 break;
             case R.id.profile_my_detail:
                 break;

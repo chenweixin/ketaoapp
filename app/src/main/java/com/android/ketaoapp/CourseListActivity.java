@@ -5,9 +5,10 @@ import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -21,11 +22,11 @@ import android.widget.Toast;
 import com.android.ketaoapp.config.Define;
 import com.android.ketaoapp.entity.Course;
 import com.android.ketaoapp.util.HTTPRequestUtil;
+import com.android.ketaoapp.view.DetailTitleView;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
-import com.nostra13.universalimageloader.core.ImageLoader;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -36,37 +37,92 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
-import cz.msebera.android.httpclient.entity.StringEntity;
-import cz.msebera.android.httpclient.message.BasicHeader;
-import cz.msebera.android.httpclient.protocol.HTTP;
 
-public class ReccourseActivity extends Activity implements PullToRefreshBase.OnRefreshListener2{
+public class CourseListActivity extends Activity implements PullToRefreshBase.OnRefreshListener2{
+
+    public static final String LIST_TYPE = "LIST_TYPE";
+    public static final int REC_COURSE = 0;
+    public static final int MY_COURSE = 1;
 
     private Context context;
+    private int list_type = 0;//0:推荐课程 1:我的课程
     private int pageSize = 10, pageIndex = 0;
+    private String request_url;
 
     private List<Course> courses = new ArrayList<Course>();
     private CourseAdapter adapter;
 
     private PullToRefreshListView listView;
+    private DetailTitleView titleView;
     private FrameLayout rl_cover_loading;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_reccourse);
+        setContentView(R.layout.activity_course_list);
 
-        listView = (PullToRefreshListView) findViewById(R.id.lv_reccourse);
+        context = CourseListActivity.this;
+        list_type = getIntent().getIntExtra(LIST_TYPE, 0);
+
+        listView = (PullToRefreshListView) findViewById(R.id.lv_course);
         rl_cover_loading = (FrameLayout) findViewById(R.id.rl_cover_loading);
+        titleView = (DetailTitleView) findViewById(R.id.course_title_view);
 
-        context = this;
         adapter = new CourseAdapter(context, courses);
         listView.setMode(PullToRefreshBase.Mode.BOTH);
         listView.setShowIndicator(false);
         listView.setAdapter(adapter);
         listView.setOnRefreshListener(this);
 
-        getCourses();
+        switch (list_type){
+            case REC_COURSE:
+                request_url = Define.SERVER_HOST + "/mobile/course/getranking";
+                titleView.setItemTitle("推荐课程");
+                break;
+            case MY_COURSE:
+                request_url = Define.SERVER_HOST + "/mobile/coscollect/getmy";
+                titleView.setItemTitle("我的课程");
+                break;
+        }
+        getCourses(true);
+    }
+
+    @Override
+    public void onPullDownToRefresh(PullToRefreshBase refreshView) {
+        listView.postDelayed(new Runnable() {
+
+            @Override
+            public void run() {
+                // TODO Auto-generated method stub
+                if (listView.isRefreshing()) {
+                    listView.onRefreshComplete();
+                }
+            }
+        }, 4000);//4秒超时
+        pageIndex = 0;
+        getCourses(true);
+    }
+
+    @Override
+    public void onPullUpToRefresh(PullToRefreshBase refreshView) {
+        listView.postDelayed(new Runnable() {
+
+            @Override
+            public void run() {
+                // TODO Auto-generated method stub
+                if (listView.isRefreshing()) {
+                    listView.onRefreshComplete();
+                }
+            }
+        }, 4000);//4秒超时
+        listView.postDelayed(new Runnable() {
+
+            @Override
+            public void run() {
+                // TODO Auto-generated method stub
+                getCourses(false);
+            }
+        }, 500);
     }
 
     private Handler handler = new Handler(){
@@ -85,22 +141,19 @@ public class ReccourseActivity extends Activity implements PullToRefreshBase.OnR
         }
     };
 
-    private void getCourses(){
+    private void getCourses(final boolean isDown){
         RequestParams params = new RequestParams();
         params.add("pageSize", String.valueOf(pageSize));
         params.add("pageIndex", String.valueOf(pageIndex));
         params.add("student_id", Define.USER_NAME);
-        HTTPRequestUtil.get(Define.SERVER_HOST + "/mobile/course/getranking", params, new JsonHttpResponseHandler() {
+        HTTPRequestUtil.get(request_url, params, new JsonHttpResponseHandler() {
 
             @Override
             public void onSuccess(int statusCode, cz.msebera.android.httpclient.Header[] headers, JSONArray response) {
-                courses.clear();
-                rl_cover_loading.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        handler.sendEmptyMessage(0);
-                    }
-                }, 500);
+                if(isDown){
+                    courses.clear();
+                }
+
                 for (int i = 0; i < response.length(); i++) {
                     try {
                         JSONObject jsonObject = response.getJSONObject(i);
@@ -152,93 +205,34 @@ public class ReccourseActivity extends Activity implements PullToRefreshBase.OnR
                         e.printStackTrace();
                     }
                 }
-                adapter.notifyDataSetChanged();
-                pageIndex++;
-                listView.postDelayed(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        // TODO Auto-generated method stub
-                        listView.onRefreshComplete();
-                    }
-                }, 500);
-                if (courses.size() < pageSize * pageIndex) {
-                    listView.setMode(PullToRefreshBase.Mode.PULL_DOWN_TO_REFRESH);
-                } else {
-                    listView.setMode(PullToRefreshBase.Mode.BOTH);
-                }
-                super.onSuccess(statusCode, headers, response);
-            }
-
-            @Override
-            public void onSuccess(int statusCode, cz.msebera.android.httpclient.Header[] headers, JSONObject response) {
-                super.onSuccess(statusCode, headers, response);
-                Toast.makeText(context, "success", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onFailure(int statusCode, cz.msebera.android.httpclient.Header[] headers, String responseString, Throwable throwable) {
-                super.onFailure(statusCode, headers, responseString, throwable);
-                Toast.makeText(context, "fail", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-    private void addCourses(){
-        RequestParams params = new RequestParams();
-        params.add("pageSize", String.valueOf(pageSize));
-        params.add("pageIndex", String.valueOf(pageIndex));
-        params.add("student_id", Define.USER_NAME);
-        HTTPRequestUtil.get(Define.SERVER_HOST + "/mobile/course/getranking", params, new JsonHttpResponseHandler() {
-
-            @Override
-            public void onSuccess(int statusCode, cz.msebera.android.httpclient.Header[] headers, JSONArray response) {
                 if(response.length() != 0){
                     pageIndex++;
                 }
-                for (int i = 0; i < response.length(); i++) {
-                    try {
-                        JSONObject jsonObject = response.getJSONObject(i);
-                        Course course = new Course();
-                        course.setId(jsonObject.getString("id"));
-                        if(jsonObject.has("name"))
-                            course.setName(jsonObject.getString("name"));
-                        if(jsonObject.has("teacher_id"))
-                            course.setTeacher_id(jsonObject.getString("teacher_id"));
-                        if(jsonObject.has("teacher_name"))
-                            course.setTeacher_name(jsonObject.getString("teacher_name"));
-                        if(jsonObject.has("location"))
-                            course.setLocation(jsonObject.getString("location"));
-                        if(jsonObject.has("credit"))
-                            course.setCredit(Integer.parseInt(jsonObject.getString("credit")));
-                        if(jsonObject.has("type"))
-                            course.setType(Integer.parseInt(jsonObject.getString("type")));
-                        if(jsonObject.has("create_time"))
-                            course.setCreate_time(jsonObject.getString("create_time"));
-                        if(jsonObject.has("num_collect"))
-                            course.setNum_collect(Integer.parseInt(jsonObject.getString("num_collect")));
-                        if(jsonObject.has("num_evaluate"))
-                            course.setNum_evaluate(Integer.parseInt(jsonObject.getString("num_evaluate")));
-                        if(jsonObject.has("score"))
-                            course.setScore(Integer.parseInt(jsonObject.getString("score")));
-                        if(jsonObject.has("avg_score"))
-                            course.setAvg_score(Double.parseDouble(jsonObject.getString("avg_score")));
-                        if(jsonObject.has("iscollect"))
-                        {
-                            if(jsonObject.getString("iscollect").equals("true")){
-                                course.setIscollect(true);
-                            }
-                            else{
-                                course.setIscollect(false);
-                            }
+                adapter.notifyDataSetChanged();
+                if(isDown) {
+                    rl_cover_loading.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            handler.sendEmptyMessage(0);
                         }
-                        courses.add(course);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
+                    }, 500);
+                    listView.postDelayed(new Runnable() {
+
+                        @Override
+                        public void run() {
+                            // TODO Auto-generated method stub
+                            listView.onRefreshComplete();
+                        }
+                    }, 500);
+                    if (courses.size() < pageSize * pageIndex) {
+                        listView.setMode(PullToRefreshBase.Mode.PULL_DOWN_TO_REFRESH);
+                    } else {
+                        listView.setMode(PullToRefreshBase.Mode.BOTH);
                     }
                 }
-                adapter.notifyDataSetChanged();
-                listView.onRefreshComplete();
+                else{
+                    listView.onRefreshComplete();
+                }
                 super.onSuccess(statusCode, headers, response);
             }
 
@@ -256,50 +250,7 @@ public class ReccourseActivity extends Activity implements PullToRefreshBase.OnR
         });
     }
 
-    @Override
-    public void onPullDownToRefresh(PullToRefreshBase refreshView) {
-        listView.postDelayed(new Runnable() {
-
-            @Override
-            public void run() {
-                // TODO Auto-generated method stub
-                if (listView.isRefreshing()) {
-                    listView.onRefreshComplete();
-                }
-            }
-        }, 4000);//4秒超时
-        pageIndex = 0;
-        getCourses();
-    }
-
-    @Override
-    public void onPullUpToRefresh(PullToRefreshBase refreshView) {
-//        if(spreads.size() < pageSize * pageIndex){
-//            listView.onRefreshComplete();
-//            return;
-//        }
-        listView.postDelayed(new Runnable() {
-
-            @Override
-            public void run() {
-                // TODO Auto-generated method stub
-                if (listView.isRefreshing()) {
-                    listView.onRefreshComplete();
-                }
-            }
-        }, 4000);//4秒超时
-        listView.postDelayed(new Runnable() {
-
-            @Override
-            public void run() {
-                // TODO Auto-generated method stub
-                addCourses();
-            }
-        }, 500);
-
-    }
-
-    class CourseAdapter extends BaseAdapter{
+    class CourseAdapter extends BaseAdapter {
 
         private List<Course> courses;
         private Context context;
@@ -414,12 +365,12 @@ public class ReccourseActivity extends Activity implements PullToRefreshBase.OnR
 
     private void collect(final RequestParams params, final int position){
         HTTPRequestUtil.get(Define.SERVER_HOST + "/mobile/coscollect/add", params, new JsonHttpResponseHandler() {
-                    @Override
-                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                        super.onSuccess(statusCode, headers, response);
-                        courses.get(position).setIscollect(true);
-                    }
-                });
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                super.onSuccess(statusCode, headers, response);
+                courses.get(position).setIscollect(true);
+            }
+        });
     }
 
     private void cancleCollect(final RequestParams params, final int position){

@@ -1,5 +1,7 @@
 package com.android.ketaoapp;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Handler;
@@ -9,6 +11,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -30,7 +33,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SpreadActivity extends Activity implements PullToRefreshBase.OnRefreshListener2{
+public class SpreadListActivity extends Activity implements PullToRefreshBase.OnRefreshListener2{
 
     private Context context;
     private int pageSize = 10, pageIndex = 0;
@@ -39,12 +42,14 @@ public class SpreadActivity extends Activity implements PullToRefreshBase.OnRefr
     private SpreadAdapter adapter;
 
     private PullToRefreshListView listView;
+    private FrameLayout rl_cover_loading;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_spread);
 
+        rl_cover_loading = (FrameLayout) findViewById(R.id.rl_cover_loading);
         listView = (PullToRefreshListView) findViewById(R.id.lv_reccourse);
 
         context = this;
@@ -54,10 +59,26 @@ public class SpreadActivity extends Activity implements PullToRefreshBase.OnRefr
         listView.setAdapter(adapter);
         listView.setOnRefreshListener(this);
 
-        getSpreads();
+        getSpreads(true);
     }
 
-    private void getSpreads(){
+    private Handler handler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            rl_cover_loading.animate()
+                    .alpha(0f)
+                    .setDuration(200)
+                    .setListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            rl_cover_loading.setVisibility(View.GONE);
+                        }
+                    });
+        }
+    };
+
+    private void getSpreads(final boolean isDown){
         RequestParams params = new RequestParams();
         params.add("pageSize", String.valueOf(pageSize));
         params.add("pageIndex", String.valueOf(pageIndex));
@@ -65,7 +86,9 @@ public class SpreadActivity extends Activity implements PullToRefreshBase.OnRefr
 
             @Override
             public void onSuccess(int statusCode, cz.msebera.android.httpclient.Header[] headers, JSONArray response) {
-                spreads.clear();
+                if(isDown){
+                    spreads.clear();
+                }
                 for (int i = 0; i < response.length(); i++) {
                     try {
                         JSONObject jsonObject = response.getJSONObject(i);
@@ -90,76 +113,34 @@ public class SpreadActivity extends Activity implements PullToRefreshBase.OnRefr
                         e.printStackTrace();
                     }
                 }
-                adapter.notifyDataSetChanged();
-                pageIndex++;
-                listView.postDelayed(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        // TODO Auto-generated method stub
-                        listView.onRefreshComplete();
-                    }
-                }, 500);
-                if(spreads.size() < pageSize * pageIndex){
-                    listView.setMode(PullToRefreshBase.Mode.PULL_DOWN_TO_REFRESH);
-                }
-                else{
-                    listView.setMode(PullToRefreshBase.Mode.BOTH);
-                }
-                super.onSuccess(statusCode, headers, response);
-            }
-
-            @Override
-            public void onSuccess(int statusCode, cz.msebera.android.httpclient.Header[] headers, JSONObject response) {
-                super.onSuccess(statusCode, headers, response);
-                Toast.makeText(context, "success", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onFailure(int statusCode, cz.msebera.android.httpclient.Header[] headers, String responseString, Throwable throwable) {
-                super.onFailure(statusCode, headers, responseString, throwable);
-                Toast.makeText(context, "fail", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-    private void addSpreads(){
-        RequestParams params = new RequestParams();
-        params.add("pageSize", String.valueOf(pageSize));
-        params.add("pageIndex", String.valueOf(pageIndex));
-        HTTPRequestUtil.get(Define.SERVER_HOST + "/mobile/spread/getall", params, new JsonHttpResponseHandler() {
-
-            @Override
-            public void onSuccess(int statusCode, cz.msebera.android.httpclient.Header[] headers, JSONArray response) {
                 if(response.length() != 0){
                     pageIndex++;
                 }
-                for (int i = 0; i < response.length(); i++) {
-                    try {
-                        JSONObject jsonObject = response.getJSONObject(i);
-                        Spread spread = new Spread();
-                        spread.setId(jsonObject.getString("id"));
-                        if(jsonObject.has("create_time"))
-                            spread.setCreate_time(jsonObject.getString("create_time"));
-                        if(jsonObject.has("event_address"))
-                            spread.setEvent_address(jsonObject.getString("event_address"));
-                        if(jsonObject.has("event_date"))
-                            spread.setEvent_date(jsonObject.getString("event_date"));
-                        if(jsonObject.has("event_describe"))
-                            spread.setEvent_describe(jsonObject.getString("event_describe"));
-                        if(jsonObject.has("poster_url"))
-                            spread.setPoster_url(jsonObject.getString("poster_url"));
-                        if(jsonObject.has("sponsor"))
-                            spread.setSponsor(jsonObject.getString("sponsor"));
-                        if(jsonObject.has("title"))
-                            spread.setTitle(jsonObject.getString("title"));
-                        spreads.add(spread);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
+                adapter.notifyDataSetChanged();
+                if(isDown) {
+                    rl_cover_loading.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            handler.sendEmptyMessage(0);
+                        }
+                    }, 500);
+                    listView.postDelayed(new Runnable() {
+
+                        @Override
+                        public void run() {
+                            // TODO Auto-generated method stub
+                            listView.onRefreshComplete();
+                        }
+                    }, 500);
+                    if (spreads.size() < pageSize * pageIndex) {
+                        listView.setMode(PullToRefreshBase.Mode.PULL_DOWN_TO_REFRESH);
+                    } else {
+                        listView.setMode(PullToRefreshBase.Mode.BOTH);
                     }
                 }
-                adapter.notifyDataSetChanged();
-                listView.onRefreshComplete();
+                else{
+                    listView.onRefreshComplete();
+                }
                 super.onSuccess(statusCode, headers, response);
             }
 
@@ -190,15 +171,11 @@ public class SpreadActivity extends Activity implements PullToRefreshBase.OnRefr
             }
         }, 4000);//4秒超时
         pageIndex = 0;
-        getSpreads();
+        getSpreads(true);
     }
 
     @Override
     public void onPullUpToRefresh(PullToRefreshBase refreshView) {
-//        if(spreads.size() < pageSize * pageIndex){
-//            listView.onRefreshComplete();
-//            return;
-//        }
         listView.postDelayed(new Runnable() {
 
             @Override
@@ -214,7 +191,7 @@ public class SpreadActivity extends Activity implements PullToRefreshBase.OnRefr
             @Override
             public void run() {
                 // TODO Auto-generated method stub
-                addSpreads();
+                getSpreads(false);
             }
         }, 500);
 

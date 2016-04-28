@@ -13,4 +13,8 @@
     <color name="tab_text_color">#717171</color>
     <color name="background_color">#f2f6f7</color>
     <color name="text_grey">#969696</color>
+    <color name="click_bg">#cecece</color>
+    <color name="search_bar">#122130</color>
+    <color name="search_edt">#465562</color>
+    <color name="search_bg">#ECECEC</color>
 </resources>

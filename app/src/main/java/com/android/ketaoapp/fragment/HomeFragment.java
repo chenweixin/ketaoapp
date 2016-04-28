@@ -20,11 +20,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.ketaoapp.CourseActivity;
-import com.android.ketaoapp.HotcommentActivity;
+import com.android.ketaoapp.AllTypeActivity;
+import com.android.ketaoapp.CommentListActivity;
+import com.android.ketaoapp.CourseListActivity;
 import com.android.ketaoapp.R;
-import com.android.ketaoapp.ReccourseActivity;
-import com.android.ketaoapp.SpreadActivity;
+import com.android.ketaoapp.SearchActivity;
+import com.android.ketaoapp.SpreadListActivity;
+import com.android.ketaoapp.TeaListActivity;
 import com.android.ketaoapp.config.Define;
 import com.android.ketaoapp.entity.Spread;
 import com.android.ketaoapp.util.CommonUtil;
@@ -265,27 +267,35 @@ public class HomeFragment extends Fragment implements PullToRefreshBase.OnRefres
 
         @Override
         public void onClick(View v) {
+            Intent intent = null;
             switch (v.getId()){
                 /**
                  * 首部导航按钮
                  */
                 case R.id.rl_scroll_course_recommended:
-                    context.startActivity(new Intent(context, ReccourseActivity.class));
+                    intent = new Intent(context, CourseListActivity.class);
+                    intent.putExtra(CourseListActivity.LIST_TYPE, CourseListActivity.REC_COURSE);
+                    context.startActivity(intent);
                     break;
                 case R.id.rl_scroll_comment_hot:
-                    context.startActivity(new Intent(context, HotcommentActivity.class));
+                    intent = new Intent(context, CommentListActivity.class);
+                    intent.putExtra(CourseListActivity.LIST_TYPE, CommentListActivity.HOT_COMMENT);
+                    context.startActivity(intent);
                     break;
                 case R.id.rl_scroll_comment_iwant:
+                    context.startActivity(new Intent(context, SearchActivity.class));
                     break;
                 case R.id.rl_scroll_teacher_like:
+                    context.startActivity(new Intent(context, TeaListActivity.class));
                     break;
                 case R.id.rl_scroll_type_all:
+                    context.startActivity(new Intent(context, AllTypeActivity.class));
                     break;
                 /**
                  * 推广
                  */
                 case R.id.spread__click_more:
-                    context.startActivity(new Intent(context, SpreadActivity.class));
+                    context.startActivity(new Intent(context, SpreadListActivity.class));
                     break;
                 case R.id.spread_first:
                     break;

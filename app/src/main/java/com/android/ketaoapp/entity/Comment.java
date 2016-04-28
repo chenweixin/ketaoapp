@@ -17,11 +17,21 @@ public class Comment {
 
     private String comment;
 
+    private Course course;
+
     private int score;
 
     private int num_like;
 
     private boolean isLike;
+
+    public Course getCourse() {
+        return course;
+    }
+
+    public void setCourse(Course course) {
+        this.course = course;
+    }
 
     public boolean isLike() {
         return isLike;

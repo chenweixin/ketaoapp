@@ -11,7 +11,8 @@ import com.nostra13.universalimageloader.core.DisplayImageOptions;
 public class Define {
 
 //    public static String SERVER_HOST = "http://10.0.2.2:8080/ketao";
-    public static String HOST = "http://192.168.1.9";
+//    public static String HOST = "http://192.168.1.9";
+public static String HOST = "http://192.168.10.235";
     public static String SERVER_HOST = HOST+":8080/ketao";
     public static String IMAGE_HOST = HOST+":8088";
     public static DisplayImageOptions options;

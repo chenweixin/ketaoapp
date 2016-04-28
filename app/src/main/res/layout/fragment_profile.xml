@@ -39,7 +39,7 @@
         android:paddingLeft="15dp"
         android:paddingRight="15dp"
         android:gravity="center_vertical"
-        android:background="@color/white"
+        android:background="@drawable/search_click_selector"
         android:layout_marginTop="20dp"
         android:id="@+id/profile_my_detail">
         <ImageView
@@ -80,7 +80,7 @@
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
         android:gravity="center_vertical"
-        android:background="@color/white"
+        android:background="@drawable/search_click_selector"
         android:layout_marginTop="20dp"
         android:id="@+id/profile_my_collect">
         <ImageView
@@ -99,6 +99,12 @@
 
     </LinearLayout>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/title_bar_line"
+        />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -108,8 +114,7 @@
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
         android:gravity="center_vertical"
-        android:background="@color/white"
-        android:layout_marginTop="1dp"
+        android:background="@drawable/layout_click_selector"
         android:id="@+id/profile_my_comment">
         <ImageView
             android:layout_width="20dp"
@@ -136,15 +141,14 @@
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
         android:gravity="center_vertical"
-        android:background="@color/white"
-        android:layout_marginTop="1dp"
+        android:background="@drawable/layout_click_selector"
+        android:layout_marginTop="15dp"
         android:id="@+id/profile_my_logout">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="退出"
             android:textColor="@color/text_color"
-            android:layout_marginLeft="12dp"
             android:textSize="17dp"
             />
 

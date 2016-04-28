@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:my="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.android.ketaoapp.ReccourseActivity"
     android:orientation="vertical">
 
     <com.android.ketaoapp.view.DetailTitleView
+        android:id="@+id/course_title_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        my:item_title="热门评论"
         my:left_src="@drawable/detail_navigation_back"
         >
 
@@ -33,7 +32,7 @@
 
     <com.handmark.pulltorefresh.library.PullToRefreshListView
         xmlns:ptr="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/lv_hotcomment"
+        android:id="@+id/lv_course"
         android:layout_width="fill_parent"
         android:layout_height="match_parent"
         android:background="#ffefefef"

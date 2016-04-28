@@ -222,6 +222,8 @@ public class CourseActivity extends Activity implements PullToRefreshBase.OnRefr
                             comment.setComment(object.getString("comment"));
                         if(object.has("num_like"))
                             comment.setNum_like(object.getInt("num_like"));
+                        if(object.has("score"))
+                            comment.setScore(object.getInt("score"));
                         if(object.has("islike")){
                             if(object.getString("islike").equals("true"))
                                 comment.setIsLike(true);
@@ -281,6 +283,8 @@ public class CourseActivity extends Activity implements PullToRefreshBase.OnRefr
                             comment.setComment(object.getString("comment"));
                         if(object.has("num_like"))
                             comment.setNum_like(object.getInt("num_like"));
+                        if(object.has("score"))
+                            comment.setScore(object.getInt("score"));
                         if(object.has("islike")){
                             if(object.getString("islike").equals("true")){
                                 comment.setIsLike(true);
@@ -402,17 +406,19 @@ public class CourseActivity extends Activity implements PullToRefreshBase.OnRefr
                     commentHolder.ic_like = (ImageView) view.findViewById(R.id.item_comment_ic_like);
                     commentHolder.tv_like = (TextView) view.findViewById(R.id.item_comment_tv_like);
                     commentHolder.rl_like = (LinearLayout) view.findViewById(R.id.item_comment_rl_like);
+                    commentHolder.comment_bar = (EvaluationView) view.findViewById(R.id.item_comment_bar);
 
                     view.setTag(commentHolder);
                 }
                 else{
                     commentHolder = (CommentHolder) view.getTag();
                 }
-                ImageLoader.getInstance().displayImage(Define.IMAGE_HOST+comments.get(p).getStudent_avatar(), commentHolder.avatar);
+                ImageLoader.getInstance().displayImage(Define.IMAGE_HOST + comments.get(p).getStudent_avatar(), commentHolder.avatar);
                 commentHolder.student_name.setText(comments.get(p).getStudent_name());
                 commentHolder.create_time.setText(CommonUtil.getFormatedDateTime(Long.parseLong(comments.get(p).getCreate_time()) / 1000));
                 commentHolder.comment.setText(comments.get(p).getComment());
                 commentHolder.tv_like.setText(comments.get(p).getNum_like() + "");
+                commentHolder.comment_bar.setLike(comments.get(p).getScore());
                 if(comments.get(p).isLike()){
                     commentHolder.ic_like.setImageResource(R.mipmap.statusdetail_comment_icon_like_highlighted);
                 }
@@ -456,6 +462,7 @@ public class CourseActivity extends Activity implements PullToRefreshBase.OnRefr
     class CommentHolder{
         ImageView avatar, ic_like;
         TextView student_name, create_time, tv_like, comment;
+        EvaluationView comment_bar;
         LinearLayout rl_like;
     }
 
