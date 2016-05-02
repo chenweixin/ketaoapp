@@ -19,9 +19,8 @@ public class DoInDataBaseUtil {
 		values.put("search", search.getSearch());
 		values.put("timestamp", search.getTimestamp());
 		try {
-			db.insert("search_record", null, values);
+			db.replace("search_record", null, values);
 		} catch (Exception e) {
-			db.update("search_record", values, "search=?", new String[] {search.getSearch()});
 		}
 		values.clear();
 		db.close();
@@ -38,7 +37,7 @@ public class DoInDataBaseUtil {
 	}
 
 	public static List<Search> getSearch(SQLiteDatabase db, String user_id){
-		Cursor c = db.rawQuery("select * from search_record where user_id=?",
+		Cursor c = db.rawQuery("select * from search_record where user_id=? order by timestamp desc",
 				new String[] { user_id});
 		List<Search> searches = new ArrayList<Search>();
 		if(c != null){

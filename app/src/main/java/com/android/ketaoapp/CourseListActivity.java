@@ -41,13 +41,19 @@ import cz.msebera.android.httpclient.Header;
 public class CourseListActivity extends Activity implements PullToRefreshBase.OnRefreshListener2{
 
     public static final String LIST_TYPE = "LIST_TYPE";
+    public static final String SEARCH = "SEARCH";
+    public static final String TYPE = "TYPE";
     public static final int REC_COURSE = 0;
     public static final int MY_COURSE = 1;
+    public static final int SEARCH_COURSE = 2;
+    public static final int TYPE_COURSE = 3;
 
     private Context context;
     private int list_type = 0;//0:推荐课程 1:我的课程
     private int pageSize = 10, pageIndex = 0;
     private String request_url;
+    private String search;
+    private int course_type = 0;
 
     private List<Course> courses = new ArrayList<Course>();
     private CourseAdapter adapter;
@@ -63,6 +69,12 @@ public class CourseListActivity extends Activity implements PullToRefreshBase.On
 
         context = CourseListActivity.this;
         list_type = getIntent().getIntExtra(LIST_TYPE, 0);
+        if(list_type == SEARCH_COURSE){
+            search = getIntent().getStringExtra(SEARCH);
+        }
+        else if(list_type == TYPE_COURSE){
+            course_type = getIntent().getIntExtra(TYPE, 0);
+        }
 
         listView = (PullToRefreshListView) findViewById(R.id.lv_course);
         rl_cover_loading = (FrameLayout) findViewById(R.id.rl_cover_loading);
@@ -82,6 +94,10 @@ public class CourseListActivity extends Activity implements PullToRefreshBase.On
             case MY_COURSE:
                 request_url = Define.SERVER_HOST + "/mobile/coscollect/getmy";
                 titleView.setItemTitle("我的课程");
+                break;
+            case TYPE_COURSE:
+                request_url = Define.SERVER_HOST + "/mobile/course/getbytype";
+                titleView.setItemTitle("人文科学");
                 break;
         }
         getCourses(true);
@@ -146,6 +162,12 @@ public class CourseListActivity extends Activity implements PullToRefreshBase.On
         params.add("pageSize", String.valueOf(pageSize));
         params.add("pageIndex", String.valueOf(pageIndex));
         params.add("student_id", Define.USER_NAME);
+        if(list_type == SEARCH_COURSE){
+            params.add("search", search);
+        }
+        if(list_type == TYPE_COURSE){
+            params.add("type", String.valueOf(course_type));
+        }
         HTTPRequestUtil.get(request_url, params, new JsonHttpResponseHandler() {
 
             @Override

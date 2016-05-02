@@ -29,6 +29,7 @@
                 android:textColorHint="#BCBDB8"
                 android:textColor="@color/white"
                 android:textSize="16dp"
+                android:imeOptions="actionSearch"
                 android:hint="课程名称"/>
         </LinearLayout>
 
